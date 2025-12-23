@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import ApplicationPeriod, InterviewPeriod
 
-# Register your models here.
+admin.site.register(ApplicationPeriod)
+admin.site.register(InterviewPeriod)
