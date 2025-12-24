@@ -24,12 +24,27 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
+    'allauth',
+    'allauth.account',
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "dj_rest_auth",
+    "dj_rest_auth.registration", 
     'rest_framework_simplejwt',
     'applications',
     'managers',
 ]
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+    
+)
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -61,7 +76,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'configs.wsgi.application'
 
-AUTH_USER_MODEL = 'auth.User'
+AUTH_USER_MODEL = 'managers.Manager'
 
 
 # Password validation
@@ -155,3 +170,12 @@ SIMPLE_JWT = {
 
     'TOKEN_USER_CLASS': AUTH_USER_MODEL,
 }
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
+SOCIALACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_QUERY_EMAIL = True
+

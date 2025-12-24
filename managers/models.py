@@ -10,6 +10,15 @@ class Manager(AbstractUser):
         null=False
     ) 
     password = models.CharField(max_length=128)
+    
+class AllowedManagerEmail(models.Model):
+    email = models.EmailField(unique=True)
+    is_active = models.BooleanField(default=True)
+    memo = models.CharField(max_length=200, blank=True, default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email
 
 class ApplicationPeriod(models.Model):
     start_datetime = models.DateTimeField()
