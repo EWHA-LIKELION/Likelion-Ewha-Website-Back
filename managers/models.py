@@ -1,5 +1,15 @@
 from django.db import models
 from utils.choices import PartChoices, MethodChoices
+from django.contrib.auth.models import AbstractUser
+
+class Manager(AbstractUser):
+    id = models.AutoField(primary_key=True)
+    email = models.EmailField(
+        unique=True,
+        blank=False,
+        null=False
+    ) 
+    password = models.CharField(max_length=128)
 
 class ApplicationPeriod(models.Model):
     start_datetime = models.DateTimeField()
