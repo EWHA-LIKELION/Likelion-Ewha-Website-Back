@@ -21,3 +21,4 @@ class StatusChoices(TextChoices):
     PENDING = 'PENDING', '심사중'
     APPROVED = 'APPROVED', '합격'
     REJECTED = 'REJECTED', '불합격'
+    ONLINE = 'ONLINE', '비대면'
