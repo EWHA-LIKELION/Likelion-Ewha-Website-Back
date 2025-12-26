@@ -1,12 +1,11 @@
-version: '3'
+version: "3"
 services:
-
   # Django 웹 애플리케이션을 실행
   web:
     container_name: web
     build:
       context: ./
-      dockerfile: Dockerfile.prod    # Dockerfile.prod를 사용해 이미지를 빌드
+      dockerfile: Dockerfile.prod # Dockerfile.prod를 사용해 이미지를 빌드
     # 컨테이너가 시작될 때 Gunicorn 웹 서버를 사용하여 Django 애플리케이션을 실행
     command: gunicorn configs.wsgi:application --bind 0.0.0.0:8000
     environment: # settings.prod를 설정 모듈로 설정
@@ -18,22 +17,19 @@ services:
       - media:/home/app/web/media
     expose:
       - 8000
-    # 컨테이너가 시작될 때 entrypoint.prod.sh 스크립트를 실행하여 초기화 작업을 수행
-    entrypoint:
-      - sh
-      - configs/docker/entrypoint.prod.sh 
-
+    entrypoint: ["/home/app/web/entrypoint.prod.sh"]
+    commend: gunicorn configs.wsgi:application --bind 0.0.0.0:8000 --access-logfile - --error-logfile -
   # Nginx를 사용하여 웹 서버를 설정, Django 애플리케이션에 대한 요청을 처리
   nginx:
     container_name: nginx
     # ./config/nginx의 Dockerfile을 사용해 Nginx 이미지를 빌드
-    build: ./configs/nginx  
+    build: ./configs/nginx
     volumes:
-      - static:/home/app/web/static  # Nginx가 정적 파일을 제공할 수 있도록 설정
-      - media:/home/app/web/media    # 미디어 파일을 제공할 수 있도록 설정
+      - static:/home/app/web/static # Nginx가 정적 파일을 제공할 수 있도록 설정
+      - media:/home/app/web/media # 미디어 파일을 제공할 수 있도록 설정
     ports:
-      - "80:80" 
-      # 호스트의 80 포트를 컨테이너의 80 포트에 매핑하여 
+      - "80:80"
+      # 호스트의 80 포트를 컨테이너의 80 포트에 매핑하여
       # Nginx가 HTTP 요청을 수신할 수 있도록 함
     depends_on:
       - web
