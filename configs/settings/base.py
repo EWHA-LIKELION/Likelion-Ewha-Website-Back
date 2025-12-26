@@ -135,6 +135,14 @@ CORS_ALLOW_HEADERS = (
 
 CORS_ALLOW_CREDENTIALS = True
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'https://api.ewhalikelion.site',
+    'https://api.ewhalikelion.site/',
+    'https://ewhalikelion.vercel.app/',
+    'https://ewhalikelion.vercel.app'
+]
+
 
 # Django REST Framework
 
