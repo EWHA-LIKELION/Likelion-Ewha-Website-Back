@@ -8,9 +8,9 @@ services:
       context: ./
       dockerfile: Dockerfile.prod    # Dockerfile.prod를 사용해 이미지를 빌드
     # 컨테이너가 시작될 때 Gunicorn 웹 서버를 사용하여 Django 애플리케이션을 실행
-    command: gunicorn LIKELION-EWHA-WEBSITE-BACK.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn configs.wsgi:application --bind 0.0.0.0:8000
     environment: # settings.prod를 설정 모듈로 설정
-      DJANGO_SETTINGS_MODULE: LIKELION-EWHA-WEBSITE-BACK.settings.prod
+      DJANGO_SETTINGS_MODULE: configs.settings.prod
     env_file:
       - .env # 환경 변수를 .env 파일에서 로드
     volumes:
@@ -21,13 +21,13 @@ services:
     # 컨테이너가 시작될 때 entrypoint.prod.sh 스크립트를 실행하여 초기화 작업을 수행
     entrypoint:
       - sh
-      - config/docker/entrypoint.prod.sh 
+      - configs/docker/entrypoint.prod.sh 
 
   # Nginx를 사용하여 웹 서버를 설정, Django 애플리케이션에 대한 요청을 처리
   nginx:
     container_name: nginx
     # ./config/nginx의 Dockerfile을 사용해 Nginx 이미지를 빌드
-    build: ./config/nginx  
+    build: ./configs/nginx  
     volumes:
       - static:/home/app/web/static  # Nginx가 정적 파일을 제공할 수 있도록 설정
       - media:/home/app/web/media    # 미디어 파일을 제공할 수 있도록 설정

@@ -5,10 +5,10 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main # main브랜치에 push되었을 때
+      - prod/11-aws # main브랜치에 push되었을 때
   pull_request:
     branches:
-      - main # main브랜치에 pr 날렸을 때
+      - prod/11-aws # main브랜치에 pr 날렸을 때
 
 jobs:
   build:
@@ -52,4 +52,4 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            sh /home/ubuntu/srv/ubuntu/config/scripts/deploy.sh
+            sh /home/ubuntu/srv/ubuntu/configs/scripts/deploy.sh
