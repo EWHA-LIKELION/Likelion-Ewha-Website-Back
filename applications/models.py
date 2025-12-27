@@ -19,6 +19,8 @@ class Application(models.Model):
     )
     student_number = models.CharField(
         help_text="학번",
+        primary_key=True,
+        editable=False,
         max_length=7,
     )
     grade = models.CharField(
