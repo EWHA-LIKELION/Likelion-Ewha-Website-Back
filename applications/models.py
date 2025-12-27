@@ -59,25 +59,24 @@ class Application(models.Model):
         null=False,
         blank=False,
     )
-    question_1 = models.TextField(
+    question_1 = models.CharField(
         help_text="자기소개서 1번 문항의 답변",
         max_length=500,
     )
-    question_2 = models.TextField(
+    question_2 = models.CharField(
         help_text="자기소개서 2번 문항의 답변",
         max_length=500,
     )
-    question_3 = models.TextField(
+    question_3 = models.CharField(
         help_text="자기소개서 3번 문항의 답변",
         max_length=500,
     )
-    question_4 = models.TextField(
+    question_4 = models.CharField(
         help_text="자기소개서 4번 문항의 답변",
         max_length=500,
     )
     question_5 = models.TextField(
         help_text="자기소개서 5번 문항의 답변",
-        max_length=500,
     )
 
     def __str__(self):
