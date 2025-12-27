@@ -7,8 +7,8 @@ class ApplicationPeriod(models.Model):
         max_length=20,
         choices=PartChoices.choices
     )
-    start_datetime = models.DateTimeField()
-    end_datetime = models.DateTimeField()
+    start_datetime = models.DateTimeField(null=True, blank=True)
+    end_datetime = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(
         auto_now_add=True
     )
@@ -17,11 +17,9 @@ class ApplicationPeriod(models.Model):
     )
 
     def __str__(self):
-        return (
-            f"지원 기간 | "
-            f"{self.start_datetime.strftime('%Y-%m-%d %H:%M')} ~ "
-            f"{self.end_datetime.strftime('%Y-%m-%d %H:%M')}"
-        )
+        start = self.start_datetime.strftime("%Y-%m-%d %H:%M") if self.start_datetime else "미설정"
+        end = self.end_datetime.strftime("%Y-%m-%d %H:%M") if self.end_datetime else "미설정"
+        return f"지원 기간 | {start} ~ {end}"
 
 class InterviewPeriod(models.Model):
     recruit_year = models.IntegerField()
