@@ -13,7 +13,7 @@ class PartChoices(TextChoices):
     FRONTEND  = 'FRONTEND', '프론트엔드'
     BACKEND   = 'BACKEND', '백엔드'
 
-class MethodChoices(TextChoices):
+class InterviewMethodChoices(TextChoices):
     OFFLINE = 'OFFLINE', '대면'
     ONLINE = 'ONLINE', '비대면'
 

@@ -1,5 +1,5 @@
 from django.db import models
-from utils.choices import MethodChoices, PartChoices, StatusChoices
+from utils.choices import PartChoices, InterviewMethodChoices, StatusChoices
 
 class Application(models.Model):
     name = models.CharField(
@@ -25,10 +25,10 @@ class Application(models.Model):
         help_text="학년",
         max_length=20,
     )
-    method = models.CharField(
+    interview_method = models.CharField(
         help_text="면접 참여 방식",
         max_length=20,
-        choices=MethodChoices.choices,
+        choices=InterviewMethodChoices.choices,
     )
     part = models.CharField(
         help_text="지원 파트",
@@ -54,28 +54,28 @@ class Application(models.Model):
         null=False,
         blank=False,
     )
-    time = models.DateTimeField(
+    interview_time = models.DateTimeField(
         help_text="면접 가능 시간",
         null=False,
         blank=False,
     )
-    question_1 = models.CharField(
+    personal_statement_1 = models.CharField(
         help_text="자기소개서 1번 문항의 답변",
         max_length=500,
     )
-    question_2 = models.CharField(
+    personal_statement_2 = models.CharField(
         help_text="자기소개서 2번 문항의 답변",
         max_length=500,
     )
-    question_3 = models.CharField(
+    personal_statement_3 = models.CharField(
         help_text="자기소개서 3번 문항의 답변",
         max_length=500,
     )
-    question_4 = models.CharField(
+    personal_statement_4 = models.CharField(
         help_text="자기소개서 4번 문항의 답변",
         max_length=500,
     )
-    question_5 = models.TextField(
+    personal_statement_5 = models.TextField(
         help_text="자기소개서 5번 문항의 답변",
     )
 
