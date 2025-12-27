@@ -4,6 +4,7 @@ import environ
 environ.Env.read_env(os.path.join(BASE_DIR, '.env', 'dev'))
 
 DATABASES = {
+
     'default': env.db(),
 }
 

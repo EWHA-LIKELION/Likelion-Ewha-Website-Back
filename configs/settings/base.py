@@ -14,6 +14,8 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env', 'base'))
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
+GOOGLE_OAUTH_CLIENT_ID = env('GOOGLE_OAUTH_CLIENT_ID')
+
 
 # Application definition
 
@@ -28,12 +30,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
-    'allauth',
-    'allauth.account',
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",
-    "dj_rest_auth",
-    "dj_rest_auth.registration", 
+    'dj_rest_auth',
     'rest_framework_simplejwt',
     'applications',
     'managers',
@@ -41,8 +38,7 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = (
-    "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
+    'django.contrib.auth.backends.ModelBackend',
     
 )
 
@@ -89,6 +85,10 @@ AUTH_PASSWORD_VALIDATORS = [
     { 'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator' },
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost",
+    "http://127.0.0.1",
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -171,11 +171,20 @@ SIMPLE_JWT = {
     'TOKEN_USER_CLASS': AUTH_USER_MODEL,
 }
 
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_LOGIN_METHODS = {'email'}  # 이메일로 로그인
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']  # 회원가입 필드 (필요한 것만)
 
 SOCIALACCOUNT_EMAIL_REQUIRED = True
 SOCIALACCOUNT_QUERY_EMAIL = True
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    }
+}
+
+SOCIALACCOUNT_ADAPTER = "managers.adapters.AdminOnlySocialAccountAdapter"
+
+
 
