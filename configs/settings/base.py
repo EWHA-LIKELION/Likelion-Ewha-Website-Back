@@ -172,7 +172,6 @@ SIMPLE_JWT = {
 }
 
 ACCOUNT_LOGIN_METHODS = {'email'}  # 이메일로 로그인
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']  # 회원가입 필드 (필요한 것만)
 
 SOCIALACCOUNT_EMAIL_REQUIRED = True
 SOCIALACCOUNT_QUERY_EMAIL = True
