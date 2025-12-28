@@ -6,5 +6,5 @@ app_name = 'managers'
 
 urlpatterns = [
     path("auth/login/google/", GoogleAdminLoginView.as_view(), name="google-admin-login"),
-    path("auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("auth/access-token/", TokenRefreshView.as_view(), name="token_refresh"),
 ]

@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.views import APIView
 from rest_framework import status
 from django.contrib.auth import get_user_model
@@ -8,7 +9,10 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAdminUser
 from django.utils.decorators import method_decorator
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime, timedelta
+
 
 from .models import AllowedManagerEmail
 from .google import verify_google_id_token
@@ -62,10 +66,12 @@ class GoogleAdminLoginView(APIView):
         # JWT 발급
         refresh = RefreshToken.for_user(user)
         access = refresh.access_token
+        access_lifetime = access.lifetime
 
         return Response(
             {
                 "access": str(access),
+                "expires_at": (timezone.now() + access_lifetime).isoformat(),
                 "refresh": str(refresh),
                 "user": {
                     "id": user.id,
@@ -77,4 +83,8 @@ class GoogleAdminLoginView(APIView):
         )
 
 class ManagerTestView(APIView):
+    permission_classes = [IsAdminUser]
+    
+class SomeManagerView(APIView):
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser]
