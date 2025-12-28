@@ -89,7 +89,7 @@ class Application(models.Model):
     )
     application_code = models.CharField(
         help_text="지원 코드",
-        max_length=6,
+        max_length=10,
     )
     status = models.CharField(
         help_text="합불 여부",
