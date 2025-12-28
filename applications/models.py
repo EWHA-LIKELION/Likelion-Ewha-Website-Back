@@ -2,6 +2,7 @@ from django.db import models
 from utils.choices import PartChoices, InterviewMethodChoices, StatusChoices
 
 class Application(models.Model):
+    # 인적사항
     name = models.CharField(
         help_text="이름",
         max_length=30,
@@ -27,39 +28,24 @@ class Application(models.Model):
         help_text="학년",
         max_length=20,
     )
+
+    # 면접
     interview_method = models.CharField(
         help_text="면접 참여 방식",
         max_length=20,
         choices=InterviewMethodChoices.choices,
     )
-    part = models.CharField(
-        help_text="지원 파트",
-        max_length=20,
-        choices=PartChoices.choices,
-    )
-    status = models.CharField(
-        help_text="합불 여부",
-        max_length=10,
-        choices=StatusChoices.choices,
-        default="PENDING",
-    )
-    application_code = models.CharField(
-        help_text="지원 코드",
-        max_length=6,
-    )
-    created_at = models.DateTimeField(
-        help_text="지원서 생성 일시",
-        auto_now_add=True,
-    )
-    file_url = models.URLField(
-        help_text="첨부파일",
-        null=False,
-        blank=False,
-    )
     interview_time = models.DateTimeField(
         help_text="면접 가능 시간",
         null=False,
         blank=False,
+    )
+
+    # 자기소개서
+    part = models.CharField(
+        help_text="지원 파트",
+        max_length=20,
+        choices=PartChoices.choices,
     )
     personal_statement_1 = models.CharField(
         help_text="자기소개서 1번 문항의 답변",
@@ -79,6 +65,27 @@ class Application(models.Model):
     )
     personal_statement_5 = models.TextField(
         help_text="자기소개서 5번 문항의 답변",
+    )
+    file_url = models.URLField(
+        help_text="첨부파일",
+        null=False,
+        blank=False,
+    )
+
+    # 그외
+    created_at = models.DateTimeField(
+        help_text="지원서 생성 일시",
+        auto_now_add=True,
+    )
+    application_code = models.CharField(
+        help_text="지원 코드",
+        max_length=6,
+    )
+    status = models.CharField(
+        help_text="합불 여부",
+        max_length=10,
+        choices=StatusChoices.choices,
+        default="PENDING",
     )
 
     def __str__(self):
