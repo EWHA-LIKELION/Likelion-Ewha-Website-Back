@@ -1,5 +1,5 @@
 from django.db import models
-from utils.choices import PartChoices, MethodChoices
+from utils.choices import PartChoices, InterviewMethodChoices
 
 class ApplicationPeriod(models.Model):
     start_datetime = models.DateTimeField()
@@ -25,7 +25,7 @@ class InterviewPeriod(models.Model):
     )
     method = models.CharField(
         max_length=20,
-        choices=MethodChoices.choices
+        choices=InterviewMethodChoices.choices
     )
     time = models.DateTimeField()
     created_at = models.DateTimeField(
