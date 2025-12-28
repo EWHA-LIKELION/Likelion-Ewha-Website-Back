@@ -84,7 +84,7 @@ class Application(models.Model):
 
     # 그외
     created_at = models.DateTimeField(
-        help_text="지원서 생성 일시",
+        help_text="지원서 추가 일시",
         auto_now_add=True,
     )
     application_code = models.CharField(
