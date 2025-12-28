@@ -16,20 +16,24 @@ class ApplicationPeriod(models.Model):
         auto_now=True
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["recruit_year", "part"],
+                name="uniq_application_period_year_part",
+            )
+        ]
+
     def __str__(self):
         start = self.start_datetime.strftime("%Y-%m-%d %H:%M") if self.start_datetime else "미설정"
         end = self.end_datetime.strftime("%Y-%m-%d %H:%M") if self.end_datetime else "미설정"
-        return f"지원 기간 | {start} ~ {end}"
+        return f"{self.id} | {self.recruit_year}년 {self.get_part_display()} | {start} ~ {end}"
 
 class InterviewPeriod(models.Model):
     recruit_year = models.IntegerField()
     part = models.CharField(
         max_length=20,
         choices=PartChoices.choices
-    )
-    method = models.CharField(
-        max_length=20,
-        choices=MethodChoices.choices
     )
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
@@ -40,8 +44,18 @@ class InterviewPeriod(models.Model):
         auto_now=True
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["recruit_year", "part"],
+                name="uniq_interview_period_year_part",
+            )
+        ]
+
     def __str__(self):
-        return f"{self.recruit_year}년 {self.get_part_display()} | {self.get_method_display()} | {self.start_date} ~ {self.end_date}"
+        start = self.start_date.isoformat() if self.start_date else "미설정"
+        end = self.end_date.isoformat() if self.end_date else "미설정"
+        return f"{self.id} | {self.recruit_year}년 {self.get_part_display()} | {start} ~ {end}"
 
 class InterviewSchedule(models.Model):
     recruit_year = models.IntegerField()
@@ -62,5 +76,13 @@ class InterviewSchedule(models.Model):
         auto_now=True
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["recruit_year", "part", "method", "date"],
+                name="uniq_interview_schedule_year_part_method_date",
+            )
+        ]
+
     def __str__(self):
-        return f"{self.recruit_year}년 {self.get_part_display()} | {self.get_method_display()} | {self.date}"
+        return f"{self.id} | {self.recruit_year}년 {self.get_part_display()} | {self.get_method_display()} | {self.date}"
