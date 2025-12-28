@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import RecruitmentSchedule, InterviewPeriod
+from .models import RecruitmentSchedule, InterviewSchedule
 
 admin.site.register(RecruitmentSchedule)
-admin.site.register(InterviewPeriod)
+admin.site.register(InterviewSchedule)

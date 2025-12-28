@@ -1,5 +1,5 @@
 from django.db import models
-from utils.choices import PartChoices, InterviewMethodChoices
+from utils.choices import InterviewMethodChoices
 
 class RecruitmentSchedule(models.Model):
     year = models.PositiveSmallIntegerField(
@@ -33,26 +33,24 @@ class RecruitmentSchedule(models.Model):
     def __str__(self):
         return f"{self.year}년 모집 일정"
 
-class InterviewPeriod(models.Model):
-    part = models.CharField(
-        max_length=20,
-        choices=PartChoices.choices
+class InterviewSchedule(models.Model):
+    recruitment_schedule = models.ForeignKey(
+        help_text="특정 연도의 모집 일정",
+        to=RecruitmentSchedule,
+        on_delete=models.CASCADE,
+        related_name="interview_schedules",
     )
-    method = models.CharField(
-        max_length=20,
-        choices=InterviewMethodChoices.choices
+    start = models.DateTimeField(
+        help_text="특정 날짜의 면접 시작 시각",
     )
-    time = models.DateTimeField()
-    created_at = models.DateTimeField(
-        auto_now_add=True
+    end = models.DateTimeField(
+        help_text="특정 날짜의 면접 종료 시각",
     )
-    updated_at = models.DateTimeField(
-        auto_now=True
+    interview_method = models.CharField(
+        help_text="면접 방식",
+        max_length=7,
+        choices=InterviewMethodChoices.choices,
     )
 
     def __str__(self):
-        return (
-            f"{self.get_part_display()} | "
-            f"{self.get_method_display()} | "
-            f"{self.time.strftime('%Y-%m-%d %H:%M')}"
-        )
+        return f"{self.recruitment_schedule.year}년 면접 일정 | {self.start.strftime('%Y-%m-%d %H:%M')}-{self.end.strftime('%Y-%m-%d %H:%M')} ({self.get_interview_method_display()})"
