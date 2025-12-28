@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from utils.choices import PartChoices, InterviewMethodChoices, StatusChoices
 
 class Application(models.Model):
@@ -35,8 +36,9 @@ class Application(models.Model):
         max_length=7,
         choices=InterviewMethodChoices.choices,
     )
-    interview_time = models.DateTimeField(
+    interview_time = ArrayField(
         help_text="면접 가능 시간",
+        base_field=models.DateTimeField(),
     )
 
     # 자기소개서
