@@ -37,8 +37,6 @@ class Application(models.Model):
     )
     interview_time = models.DateTimeField(
         help_text="면접 가능 시간",
-        null=False,
-        blank=False,
     )
 
     # 자기소개서
@@ -68,8 +66,6 @@ class Application(models.Model):
     )
     file_url = models.URLField(
         help_text="첨부파일",
-        null=False,
-        blank=False,
     )
 
     # 그외
