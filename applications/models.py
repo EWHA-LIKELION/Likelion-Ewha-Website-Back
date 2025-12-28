@@ -46,30 +46,30 @@ class Application(models.Model):
         blank=True,
     )
 
-    # 자기소개서
+    # 자기소개
     part = models.CharField(
         help_text="지원 파트",
         max_length=9,
         choices=PartChoices.choices,
     )
     personal_statement_1 = models.CharField(
-        help_text="자기소개서 1번 문항의 답변",
+        help_text="자기소개 1번 문항의 답변",
         max_length=500,
     )
     personal_statement_2 = models.CharField(
-        help_text="자기소개서 2번 문항의 답변",
+        help_text="자기소개 2번 문항의 답변",
         max_length=500,
     )
     personal_statement_3 = models.CharField(
-        help_text="자기소개서 3번 문항의 답변",
+        help_text="자기소개 3번 문항의 답변",
         max_length=500,
     )
     personal_statement_4 = models.CharField(
-        help_text="자기소개서 4번 문항의 답변",
+        help_text="자기소개 4번 문항의 답변",
         max_length=500,
     )
     personal_statement_5 = models.TextField(
-        help_text="자기소개서 5번 문항의 답변",
+        help_text="자기소개 5번 문항의 답변",
     )
     completed_prerequisites = ArrayField(
         help_text="선수강 강의 이수 내역",
