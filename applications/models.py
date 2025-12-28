@@ -36,9 +36,14 @@ class Application(models.Model):
         max_length=7,
         choices=InterviewMethodChoices.choices,
     )
-    interview_time = ArrayField(
+    interview_available_times = ArrayField(
         help_text="면접 가능 시간",
         base_field=models.DateTimeField(),
+    )
+    interview_at = models.DateTimeField(
+        help_text="면접 확정 시간",
+        null=True,
+        blank=True,
     )
 
     # 자기소개서
