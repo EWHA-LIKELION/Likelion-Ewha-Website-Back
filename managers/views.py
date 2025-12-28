@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, timedelta
 from rest_framework_simplejwt.views import TokenRefreshView
 from .serializers import CustomTokenRefreshSerializer
+from .api_base import ManagerBaseAPIView
 
 from .models import AllowedManagerEmail
 from .google import verify_google_id_token
@@ -83,12 +84,5 @@ class GoogleAdminLoginView(APIView):
             status=status.HTTP_200_OK,
         )
 
-class ManagerTestView(APIView):
-    permission_classes = [IsAdminUser]
-    
-class SomeManagerView(APIView): # manager api에서 authentication 검증
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAdminUser]
-    
 class CustomTokenRefreshView(TokenRefreshView):
     serializer_class = CustomTokenRefreshSerializer
