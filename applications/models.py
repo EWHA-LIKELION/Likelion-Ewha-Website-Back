@@ -71,8 +71,15 @@ class Application(models.Model):
     personal_statement_5 = models.TextField(
         help_text="자기소개서 5번 문항의 답변",
     )
-    file_url = models.URLField(
-        help_text="첨부파일",
+    completed_prerequisites = ArrayField(
+        help_text="선수강 강의 이수 내역",
+        base_field=models.URLField(),
+        size=3
+    )
+    portfolios = ArrayField(
+        help_text="포트폴리오",
+        base_field=models.URLField(),
+        size=3,
     )
 
     # 그외
