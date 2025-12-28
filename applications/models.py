@@ -32,7 +32,7 @@ class Application(models.Model):
     # 면접
     interview_method = models.CharField(
         help_text="면접 참여 방식",
-        max_length=20,
+        max_length=7,
         choices=InterviewMethodChoices.choices,
     )
     interview_time = models.DateTimeField(
@@ -44,7 +44,7 @@ class Application(models.Model):
     # 자기소개서
     part = models.CharField(
         help_text="지원 파트",
-        max_length=20,
+        max_length=9,
         choices=PartChoices.choices,
     )
     personal_statement_1 = models.CharField(
@@ -83,7 +83,7 @@ class Application(models.Model):
     )
     status = models.CharField(
         help_text="합불 여부",
-        max_length=10,
+        max_length=8,
         choices=StatusChoices.choices,
         default="PENDING",
     )
