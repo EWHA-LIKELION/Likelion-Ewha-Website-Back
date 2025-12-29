@@ -74,7 +74,7 @@ class Application(models.Model):
     completed_prerequisites = ArrayField(
         help_text="선수강 강의 이수 내역",
         base_field=models.URLField(),
-        size=3
+        size=3,
     )
     portfolios = ArrayField(
         help_text="포트폴리오",
