@@ -5,10 +5,10 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - prod/11-aws # main브랜치에 push되었을 때
+      - main # main브랜치에 push되었을 때
   pull_request:
     branches:
-      - prod/11-aws # main브랜치에 pr 날렸을 때
+      - main # main브랜치에 pr 날렸을 때
 
 jobs:
   build:
