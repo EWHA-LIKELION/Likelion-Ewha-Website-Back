@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'applications',
     'managers',
     'accounts.apps.AccountsConfig',
+    'recruitments.apps.RecruitmentsConfig',
 ]
 
 MIDDLEWARE = [
