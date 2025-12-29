@@ -16,7 +16,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from .serializers import CustomTokenRefreshSerializer
 from .api_base import ManagerBaseAPIView
 
-from .models import AllowedManagerEmail
+from .models import User
 from .google import verify_google_id_token
 
 User = get_user_model()
@@ -45,7 +45,7 @@ class GoogleAdminLoginView(APIView):
         if not email_verified:
             return Response({"detail": "Google email is not verified."}, status=status.HTTP_403_FORBIDDEN)
 
-        allowed = AllowedManagerEmail.objects.filter(email=email, is_active=True).exists()
+        allowed = User.objects.filter(email=email, is_active=True).exists()
         if not allowed:
             return Response({"detail": "Not allowed manager."}, status=status.HTTP_403_FORBIDDEN)
 

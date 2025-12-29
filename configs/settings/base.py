@@ -72,7 +72,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'configs.wsgi.application'
 
-AUTH_USER_MODEL = 'managers.Manager'
+AUTH_USER_MODEL = 'managers.User'
 
 
 # Password validation

@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.timezone import localtime
 from utils.choices import InterviewMethodChoices
 
-class Manager(AbstractUser):
+class User(AbstractUser):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(
         unique=True,
@@ -11,15 +11,11 @@ class Manager(AbstractUser):
         null=False
     ) 
     password = models.CharField(max_length=128)
-    
-class AllowedManagerEmail(models.Model):
-    id = models.AutoField(primary_key=True)
-    email = models.EmailField(unique=True)
+    username = models.CharField(max_length=150, blank=True)
     is_active = models.BooleanField(default=True)
-    memo = models.CharField(max_length=200, blank=True, default="")
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
+    is_staff = models.BooleanField(default=False)
+    
+    def __str__ (self):
         return self.email
 
 class RecruitmentSchedule(models.Model):
