@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import localtime
 from utils.choices import InterviewMethodChoices
 
 class RecruitmentSchedule(models.Model):
@@ -52,4 +53,4 @@ class InterviewSchedule(models.Model):
     )
 
     def __str__(self):
-        return f"{self.recruitment_schedule.year}년 면접 일정 | {self.start.strftime('%Y-%m-%d %H:%M')}-{self.end.strftime('%Y-%m-%d %H:%M')} ({self.get_interview_method_display()})"
+        return f"{self.recruitment_schedule.year}년 면접 일정 | {localtime(self.start).strftime('%Y-%m-%d %H:%M:%S %Z')} ~ {localtime(self.end).strftime('%Y-%m-%d %H:%M:%S %Z')} ({self.get_interview_method_display()})"
