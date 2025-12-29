@@ -10,14 +10,14 @@ class ExampleChoices(IntegerChoices):
 
 class PartChoices(TextChoices):
     PM_DESIGN = 'PM_DESIGN', '기획·디자인'
-    FRONTEND  = 'FRONTEND', '프론트엔드'
-    BACKEND   = 'BACKEND', '백엔드'
+    FRONTEND  = 'FRONTEND',  '프론트엔드'
+    BACKEND   = 'BACKEND',   '백엔드'
 
-class MethodChoices(TextChoices):
+class InterviewMethodChoices(TextChoices):
     OFFLINE = 'OFFLINE', '대면'
-    ONLINE = 'ONLINE', '비대면'
+    ONLINE  = 'ONLINE',  '비대면'
 
 class StatusChoices(TextChoices):
-    PENDING = 'PENDING', '심사중'
-    APPROVED = 'APPROVED', '합격'
+    PENDING  = 'PENDING',  '심사중'
+    ACCEPTED = 'ACCEPTED', '합격'
     REJECTED = 'REJECTED', '불합격'
