@@ -5,7 +5,6 @@ class RecruitmentSchedule(models.Model):
     year = models.PositiveSmallIntegerField(
         help_text="모집 연도",
         primary_key=True,
-        editable=False,
     )
     application_start = models.DateTimeField(
         help_text="서류 지원 기간 시작",
