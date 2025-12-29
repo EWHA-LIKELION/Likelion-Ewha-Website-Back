@@ -39,6 +39,7 @@ class Application(models.Model):
     interview_available_times = ArrayField(
         help_text="면접 가능 시간",
         base_field=models.DateTimeField(),
+        default=list,
     )
     interview_at = models.DateTimeField(
         help_text="면접 확정 시간",
@@ -75,11 +76,13 @@ class Application(models.Model):
         help_text="선수강 강의 이수 내역",
         base_field=models.URLField(),
         size=3,
+        default=list,
     )
     portfolios = ArrayField(
         help_text="포트폴리오",
         base_field=models.URLField(),
         size=3,
+        default=list,
     )
 
     # 그외
