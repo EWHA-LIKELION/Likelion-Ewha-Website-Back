@@ -27,7 +27,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
-    'managers',
     'accounts.apps.AccountsConfig',
     'recruitments.apps.RecruitmentsConfig',
 ]
