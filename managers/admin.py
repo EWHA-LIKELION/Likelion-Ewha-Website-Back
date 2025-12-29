@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import ApplicationPeriod, InterviewPeriod, Manager, AllowedManagerEmail
+from .models import Manager, AllowedManagerEmail, RecruitmentSchedule, InterviewSchedule
 
-admin.site.register(ApplicationPeriod)
-admin.site.register(InterviewPeriod)
 admin.site.register(Manager)
 admin.site.register(AllowedManagerEmail)
+admin.site.register(RecruitmentSchedule)
+admin.site.register(InterviewSchedule)
