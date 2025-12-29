@@ -4,7 +4,6 @@ from django.utils.timezone import localtime
 from utils.choices import InterviewMethodChoices
 
 class Manager(AbstractUser):
-    id = models.AutoField(primary_key=True)
     email = models.EmailField(
         unique=True,
         blank=False,
@@ -13,7 +12,6 @@ class Manager(AbstractUser):
     password = models.CharField(max_length=128)
     
 class AllowedManagerEmail(models.Model):
-    id = models.AutoField(primary_key=True)
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=True)
     memo = models.CharField(max_length=200, blank=True, default="")
