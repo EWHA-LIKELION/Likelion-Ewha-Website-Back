@@ -41,10 +41,10 @@ class InterviewSchedule(models.Model):
         related_name="interview_schedules",
     )
     start = models.DateTimeField(
-        help_text="특정 날짜의 면접 시작 시각",
+        help_text="면접 시작 일시 (end와 같은 날)",
     )
     end = models.DateTimeField(
-        help_text="특정 날짜의 면접 종료 시각",
+        help_text="면접 종료 일시 (start와 같은 날)",
     )
     interview_method = models.CharField(
         help_text="면접 방식",
