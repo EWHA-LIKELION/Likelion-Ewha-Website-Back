@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'applications',
     'managers',
     'storages',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
