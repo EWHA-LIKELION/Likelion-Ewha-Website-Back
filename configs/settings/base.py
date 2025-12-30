@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
+    'storages',
     'accounts.apps.AccountsConfig',
     'recruitments.apps.RecruitmentsConfig',
 ]
@@ -92,14 +93,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # Media files
 
-MEDIA_URL = '/media/'
+#MEDIA_URL = '/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Default primary key field type
@@ -133,6 +136,14 @@ CORS_ALLOW_HEADERS = (
 
 CORS_ALLOW_CREDENTIALS = True
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'https://api.ewhalikelion.site',
+    'https://api.ewhalikelion.site/',
+    'https://likelion-ewha-website-front.vercel.app/',
+    'https://likelion-ewha-website-front.vercel.app'
+]
+
 
 # Django REST Framework
 
@@ -155,3 +166,34 @@ SIMPLE_JWT = {
 
     'TOKEN_USER_CLASS': AUTH_USER_MODEL,
 }
+
+# S3 (django-storages)
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME')
+
+AWS_S3_CUSTOM_DOMAIN = env(
+    'AWS_S3_CUSTOM_DOMAIN',
+    default=f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"
+)
+
+# 권한 태그를 붙일지 여부
+AWS_DEFAULT_ACL = None
+
+# S3 파일 URL에 서명 토큰을 붙일지 여부
+AWS_QUERYSTRING_AUTH = False
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "location": "media",
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"

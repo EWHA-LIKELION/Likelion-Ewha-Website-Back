@@ -4,7 +4,10 @@ import environ
 environ.Env.read_env(os.path.join(BASE_DIR, '.env', 'prod'))
 
 DATABASES = {
-    'default': env.db(),
+    'default': {
+        **env.db(),
+        'OPTIONS': {'sslmode': 'require'},
+    }
 }
 
 CACHES = {
