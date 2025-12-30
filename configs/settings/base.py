@@ -27,7 +27,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
-    'applications',
     'managers',
     'storages',
     'accounts.apps.AccountsConfig',
