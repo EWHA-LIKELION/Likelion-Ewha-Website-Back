@@ -1,4 +1,4 @@
-from django.db.models import Case, When, IntegerField
+from django.db.models import Q, Case, When, IntegerField
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -14,39 +14,54 @@ class ApplicationListView(APIView):
     permission_classes = [AllowAny] #로그인 로직 추가 이후 접근 권한 설정 필요(IsAuthenticated)
 
     def get(self, request):
-        applications = Application.objects.all()
+        # 필터링
+        filters = Q()
 
         part = request.query_params.get("part")
         status = request.query_params.get("status")
         interview_method = request.query_params.get("interview_method")
 
         if part:
-            applications = applications.filter(part=part)
+            filters &= Q(part=part)
         if status:
-            applications = applications.filter(status=status)
+            filters &= Q(status=status)
         if interview_method:
-            applications = applications.filter(interview_method=interview_method)
+            filters &= Q(interview_method=interview_method)
+            
+        # 검색
+        search = request.query_params.get("search")
+        if search:
+            keywords = [k.strip() for k in search.split(",") if k.strip()] # ,로 다중 검색
 
+            for keyword in keywords:
+                filters &= (
+                    Q(name__icontains=keyword) | 
+                    Q(phone_number__icontains=keyword) | 
+                    Q(application_code__icontains=keyword)
+                )
+        applications = Application.objects.filter(filters)
+
+        # 파트 정렬 기준 정의 (기디 -> 프론트 -> 백)
         part_order = Case(
             When(part=PartChoices.PM_DESIGN, then=0),
             When(part=PartChoices.FRONTEND, then=1),
             When(part=PartChoices.BACKEND, then=2),
             output_field=IntegerField(),
         )
+
+        applications = applications.annotate(part_order=part_order)
+
+        # 정렬 (기본순, 면접순)
         order = request.query_params.get("order", "default")
 
         if order == "interview":
-            applications = applications.annotate(
-                part_order=part_order
-            ).order_by(
+            applications = applications.order_by(
                 "part_order",
                 "interview_at",
                 "application_code",
             )
         else:
-            applications = applications.annotate(
-                part_order=part_order
-            ).order_by(
+            applications = applications.order_by(
                 "part_order",
                 "name",
                 "application_code",

@@ -6,6 +6,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
     part = serializers.SerializerMethodField()
     interview_method = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
+    interview_at = serializers.SerializerMethodField()
 
     class Meta:
         model = Application
@@ -19,6 +20,11 @@ class ApplicationSerializer(serializers.ModelSerializer):
     
     def get_status(self, obj):
         return obj.get_status_display()
+    
+    def get_interview_at(self, obj):
+        if obj.interview_at is None:
+            return "미확정"
+        return obj.interview_at
     
 class ApplicationUpdateSerializer(serializers.ModelSerializer):
     class Meta:
