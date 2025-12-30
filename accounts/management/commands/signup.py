@@ -107,7 +107,7 @@ class Command(BaseCommand):
                     errors += 1
                     continue
 
-            # 비밀번호 생성 (DB에 저장되므로 재현 불가)
+            # 비밀번호 생성 
             try:
                 password = generate_strong_password(password_length)
             except Exception as e:
@@ -122,7 +122,6 @@ class Command(BaseCommand):
 
             try:
                 with transaction.atomic():
-                    # create_user 시그니처가 (email, password, **extra_fields) 형태라고 가정
                     user = User.objects.create_user(email=email, password=password, username=username)
                     user.is_staff = True
                     user.is_superuser = False
