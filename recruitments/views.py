@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .services import ApplicationService
 
-class Application(APIView):
+class ApplicationView(APIView):
     def get_permissions(self):
         if self.request.method == 'POST':
             return [AllowAny()]
