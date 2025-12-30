@@ -13,6 +13,8 @@ class ApplicationView(APIView):
             return [IsAuthenticated()]
 
     def post(self, request:HttpRequest, format=None):
+        # 서류 접수 기간인지 확인
+
         application_service = ApplicationService(request)
         application = application_service.post()
 
