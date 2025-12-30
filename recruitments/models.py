@@ -14,20 +14,20 @@ class RecruitmentSchedule(models.Model):
     application_end = models.DateTimeField(
         help_text="서류 지원 기간 종료",
     )
-    application_result_start = models.DateTimeField(
-        help_text="서류 합격자 발표 시작",
+    first_result_start = models.DateTimeField(
+        help_text="1차 합격자 발표 시작",
     )
-    # 서류 합격자 발표 종료는 지정하지 않음
+    # 1차 합격자 발표 종료는 지정하지 않음
     interview_start = models.DateTimeField(
         help_text="면접 기간 시작",
     )
     interview_end = models.DateTimeField(
         help_text="면접 기간 종료",
     )
-    interview_result_start = models.DateTimeField(
+    final_result_start = models.DateTimeField(
         help_text="최종 합격자 발표 시작",
     )
-    interview_result_end = models.DateTimeField(
+    final_result_end = models.DateTimeField(
         help_text="최종 합격자 발표 종료",
     )
 
