@@ -60,7 +60,7 @@ class InterviewSchedule(models.Model):
         choices=InterviewMethodChoices.choices,
     )
     interview_location = models.CharField(
-        help_text="면접 장소 또는 온라인 면접 링크)",
+        help_text="면접 장소 또는 온라인 면접 링크",
         max_length=255,
         null=True,
         blank=True,
