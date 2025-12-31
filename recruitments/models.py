@@ -17,11 +17,13 @@ class RecruitmentSchedule(models.Model):
     first_result_start = models.DateTimeField(
         help_text="1차 합격자 발표 시작",
     )
-    # 1차 합격자 발표 종료는 지정하지 않음
-    interview_start = models.DateTimeField(
+    first_result_end = models.DateTimeField(
+        help_text="1차 합격자 발표 종료",
+    )
+    interview_start = models.DateField(
         help_text="면접 기간 시작",
     )
-    interview_end = models.DateTimeField(
+    interview_end = models.DateField(
         help_text="면접 기간 종료",
     )
     final_result_start = models.DateTimeField(
