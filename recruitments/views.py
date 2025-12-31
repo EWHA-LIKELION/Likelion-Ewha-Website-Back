@@ -14,6 +14,7 @@ class ApplicationView(APIView):
 
     def post(self, request:HttpRequest, format=None):
         # 서류 접수 기간인지 확인
+        # 시리얼라이저 통해 요청값 검증
 
         application_service = ApplicationService(request)
         application = application_service.post()
