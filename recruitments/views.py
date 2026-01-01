@@ -17,16 +17,22 @@ class ApplicationListView(APIView):
         # 필터링
         filters = Q()
 
-        part = request.query_params.get("part")
-        status = request.query_params.get("status")
-        interview_method = request.query_params.get("interview_method")
+        part = request.query_params.getlist("part")
+        status = request.query_params.getlist("status")
+        interview_method = request.query_params.getlist("interview_method")
 
         if part:
-            filters &= Q(part=part)
+            filters &= Q(part__in=part)
         if status:
-            filters &= Q(status=status)
+            filters &= Q(status__in=status)
         if interview_method:
-            filters &= Q(interview_method=interview_method)
+            filters &= Q(interview_method__in=interview_method)
+
+        filter_counts = {
+            "part" : len(part),
+            "status" : len(status),
+            "interview_method" : len(interview_method),
+        }
             
         # 검색
         search = request.query_params.get("search")
@@ -73,4 +79,7 @@ class ApplicationListView(APIView):
         for idx, item in enumerate(data, start=1):
             item["order"] = idx
         
-        return Response(data)
+        return Response({
+            "filter_counts": filter_counts,
+            "results": data, 
+        })
