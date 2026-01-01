@@ -93,6 +93,6 @@ class RecruitmentScheduleService:
                     ]
                     if objs:
                         InterviewSchedule.objects.bulk_create(objs)
-                self._recalc_interview_period()
+                self.calc_interview_period()
 
         return self.get()
