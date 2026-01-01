@@ -25,27 +25,16 @@ class AbstractRedisSet:
         self.key = key
 
     def add(self, value):
-        cache.sadd(
-            key=self.key,
-            value=value,
-        )
+        cache.sadd(self.key, value)
 
     def remove(self, value):
-        cache.srem(
-            key=self.key,
-            value=value,
-        )
+        cache.srem(self.key, value)
 
     def count(self)->int:
-        return cache.scard(key=self.key)
+        return cache.scard(self.key)
 
     def contains(self, value)->bool:
-        return bool(
-            cache.sismember(
-                key=self.key,
-                value=value,
-            )
-        )
+        return bool(cache.sismember(self.key, value))
 
 class ApplicationFirstPendingCache(AbstractRedisSet):
     def __init__(self):
