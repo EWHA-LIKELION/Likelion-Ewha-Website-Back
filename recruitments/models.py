@@ -164,7 +164,7 @@ class Application(models.Model):
         help_text="합불 여부",
         max_length=8,
         choices=StatusChoices.choices,
-        default=StatusChoices.PENDING,
+        default=StatusChoices.FIRST_PENDING,
     )
 
     def __str__(self):
