@@ -17,11 +17,13 @@ class RecruitmentSchedule(models.Model):
     first_result_start = models.DateTimeField(
         help_text="1차 합격자 발표 시작",
     )
-    # 1차 합격자 발표 종료는 지정하지 않음
-    interview_start = models.DateTimeField(
+    first_result_end = models.DateTimeField(
+        help_text="1차 합격자 발표 종료",
+    )
+    interview_start = models.DateField(
         help_text="면접 기간 시작",
     )
-    interview_end = models.DateTimeField(
+    interview_end = models.DateField(
         help_text="면접 기간 종료",
     )
     final_result_start = models.DateTimeField(
@@ -41,6 +43,11 @@ class InterviewSchedule(models.Model):
         on_delete=models.CASCADE,
         related_name="interview_schedules",
     )
+    part = models.CharField(
+        help_text="파트",
+        max_length=9,
+        choices=PartChoices.choices,
+    )
     start = models.DateTimeField(
         help_text="면접 시작 일시 (end와 같은 날)",
     )
@@ -51,6 +58,12 @@ class InterviewSchedule(models.Model):
         help_text="면접 방식",
         max_length=7,
         choices=InterviewMethodChoices.choices,
+    )
+    interview_location = models.CharField(
+        help_text="면접 장소 또는 온라인 면접 링크",
+        max_length=255,
+        null=True,
+        blank=True,
     )
 
     def __str__(self):
