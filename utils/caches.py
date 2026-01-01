@@ -18,3 +18,30 @@ class AbstractCache:
             default=default,
             version=version,
         )
+
+class AbstractRedisSet:
+    def __init__(self, key):
+        self.key = key
+
+    def add(self, value):
+        cache.sadd(
+            key=self.key,
+            value=value,
+        )
+
+    def remove(self, value):
+        cache.srem(
+            key=self.key,
+            value=value,
+        )
+
+    def count(self)->int:
+        return cache.scard(key=self.key)
+
+    def contains(self, value)->bool:
+        return bool(
+            cache.sismember(
+                key=self.key,
+                value=value,
+            )
+        )
