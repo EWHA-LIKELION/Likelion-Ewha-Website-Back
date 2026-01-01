@@ -162,7 +162,7 @@ class Application(models.Model):
     )
     status = models.CharField(
         help_text="합불 여부",
-        max_length=8,
+        max_length=14,
         choices=StatusChoices.choices,
         default=StatusChoices.FIRST_PENDING,
     )
