@@ -6,19 +6,10 @@ class AbstractCache:
         self.key = key
 
     def set(self, value, timeout:int|None=None, version:int|None=None):
-        cache.set(
-            key=self.key,
-            value=value,
-            timeout=timeout,
-            version=version,
-        )
+        cache.set(self.key, value, timeout, version)
 
     def get(self, default=None, version:int|None=None):
-        return cache.get(
-            key=self.key,
-            default=default,
-            version=version,
-        )
+        return cache.get(self.key, default, version)
 
 class AbstractRedisSet:
     def __init__(self, key):
