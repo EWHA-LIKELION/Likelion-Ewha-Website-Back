@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.utils.timezone import localtime
 from .models import Application
 from utils.choices import InterviewMethodChoices, StatusChoices
 
@@ -24,4 +25,4 @@ class ApplicationSerializer(serializers.ModelSerializer):
     def get_interview_at(self, obj):
         if obj.interview_at is None:
             return "미확정"
-        return obj.interview_at
+        return localtime(obj.interview_at).strftime("%Y-%m-%dT%H:%M:%S")

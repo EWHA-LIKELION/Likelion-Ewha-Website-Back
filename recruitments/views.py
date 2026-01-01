@@ -1,6 +1,6 @@
 from django.db.models import Q, Case, When, IntegerField
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -11,7 +11,7 @@ from .serializers import ApplicationSerializer
 from utils.choices import PartChoices
 
 class ApplicationListView(APIView):
-    permission_classes = [AllowAny] #로그인 로직 추가 이후 접근 권한 설정 필요(IsAuthenticated)
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get(self, request):
         # 필터링
