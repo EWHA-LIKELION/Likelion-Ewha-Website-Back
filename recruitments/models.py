@@ -162,10 +162,15 @@ class Application(models.Model):
     )
     status = models.CharField(
         help_text="합불 여부",
-        max_length=8,
+        max_length=14,
         choices=StatusChoices.choices,
-        default=StatusChoices.PENDING,
+        default=StatusChoices.FIRST_PENDING,
     )
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["status"], name="application_status_idx")
+        ]
 
     def __str__(self):
         return f"{self.student_number} {self.name} ({localtime(self.created_at).strftime('%Y-%m-%d %H:%M:%S %Z')})"
