@@ -167,5 +167,10 @@ class Application(models.Model):
         default=StatusChoices.FIRST_PENDING,
     )
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["status"], name="application_status_idx")
+        ]
+
     def __str__(self):
         return f"{self.student_number} {self.name} ({localtime(self.created_at).strftime('%Y-%m-%d %H:%M:%S %Z')})"
