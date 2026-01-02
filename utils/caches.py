@@ -26,29 +26,3 @@ class AbstractRedisSet:
 
     def contains(self, value)->bool:
         return bool(cache.sismember(self.key, value))
-
-class ApplicationFirstPendingCache(AbstractRedisSet):
-    def __init__(self):
-        super().__init__(key=CacheKey.SET_APPLICATION_FIRST_PENDING.value)
-
-    def add(self, student_number:str):
-        return super().add(value=student_number)
-
-    def remove(self, student_number:str):
-        return super().remove(value=student_number)
-
-    def contains(self, student_number:str):
-        return super().contains(value=student_number)
-
-class ApplicationFirstAcceptedCache(AbstractRedisSet):
-    def __init__(self):
-        super().__init__(key=CacheKey.SET_APPLICATION_FIRST_ACCEPTED.value)
-
-    def add(self, student_number:str):
-        return super().add(value=student_number)
-
-    def remove(self, student_number:str):
-        return super().remove(value=student_number)
-
-    def contains(self, student_number:str):
-        return super().contains(value=student_number)
