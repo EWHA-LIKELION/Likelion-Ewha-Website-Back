@@ -6,7 +6,7 @@ from rest_framework import status
 
 from django.shortcuts import get_object_or_404
 
-from .models import Application
+from .models import Application, RecruitmentSchedule
 from .serializers import ApplicationSerializer
 from utils.choices import PartChoices
 
@@ -20,6 +20,7 @@ class ApplicationListView(APIView):
         part = request.query_params.getlist("part")
         status = request.query_params.getlist("status")
         interview_method = request.query_params.getlist("interview_method")
+        year = request.query_params.get("year") #다중필터링이 아니라서 getlist가 아닌 get
 
         if part:
             filters &= Q(part__in=part)
@@ -27,6 +28,19 @@ class ApplicationListView(APIView):
             filters &= Q(status__in=status)
         if interview_method:
             filters &= Q(interview_method__in=interview_method)
+
+        if year:
+            try:
+                schedule = RecruitmentSchedule.objects.get(year=year)
+                filters &= Q(
+                    created_at__gte = schedule.application_start,
+                    created_at__lte = schedule.application_end,
+                )
+            except RecruitmentSchedule.DoesNotExist:
+                return Response(
+                    {"detail": "해당 모집 연도가 존재하지 않습니다"},
+                    status=400
+                )
 
         filter_counts = {
             "part" : len(part),
