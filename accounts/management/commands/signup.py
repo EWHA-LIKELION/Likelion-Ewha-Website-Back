@@ -1,8 +1,7 @@
-import csv
-import os
+import sys
 import secrets
 import string
-from typing import Dict, List, Tuple
+from typing import List, Tuple, Optional
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
@@ -31,22 +30,43 @@ def generate_strong_password(length: int = 20) -> str:
     secrets.SystemRandom().shuffle(chars)
     return "".join(chars)
 
+# 콘솔 입력값 파싱 함수
+def _parse_line(line: str, delimiter: str) -> Tuple[Optional[str], str, Optional[str]]:
+    """
+    Returns: (email, username, error_message)
+    - Accepts: "email,username" or "email"
+    - Strips spaces.
+    """
+    raw = line.strip()
+    if not raw:
+        return None, "", "empty line"
+
+    parts = [p.strip() for p in raw.split(delimiter, 1)]
+    email = parts[0] if parts else ""
+    username = parts[1] if len(parts) == 2 else ""
+
+    if not email:
+        return None, "", "missing email"
+
+    return email, username, None
 
 class Command(BaseCommand):
-    help = "CSV(email, username)를 읽어 staff 관리자 계정을 생성하고, 이메일별로 생성된 비밀번호를 콘솔에 출력합니다."
-
+    help = (
+        "콘솔에서 email,username (또는 email) 라인을 여러 줄로 입력받아 "
+        "staff 관리자 계정을 생성하고, 이메일별로 생성된 비밀번호를 콘솔에 출력합니다.\n\n"
+        "예)\n"
+        "  a@company.com,alice\n"
+        "  b@company.com,bob\n"
+        "  c@company.com\n\n"
+        "입력 종료: mac/linux Ctrl+D, windows Ctrl+Z 후 Enter"
+    )
+        
     def add_arguments(self, parser):
-        parser.add_argument(
-            "--input",
-            required=True,
-            type=str,
-            help="입력 CSV 경로 (예: ./csv/manager.csv)",
-        )
         parser.add_argument(
             "--delimiter",
             default=",",
             type=str,
-            help="CSV 구분자 (기본 ,)",
+            help="입력 라인에서 email과 username을 구분하는 구분자 (기본 ,)",
         )
         parser.add_argument(
             "--skip-existing",
@@ -60,19 +80,28 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        input_path: str = options["input"]
         delimiter: str = options["delimiter"]
         password_length: int = 20
         skip_existing: bool = options["skip_existing"]
         dry_run: bool = options["dry_run"]
 
-        if not os.path.exists(input_path):
-            raise CommandError(f"입력 CSV가 존재하지 않습니다: {input_path}")
+        self.stdout.write(
+            self.style.SUCCESS(
+                "콘솔에 email,username (또는 email) 을 여러 줄로 붙여넣고 입력을 종료하세요. "
+                "(mac/linux Ctrl+D, windows Ctrl+Z 후 Enter)"
+    )
+        )
+        
+        # stdin 전체 읽기
+        try:
+            input_text = sys.stdin.read()
+        except Exception as e:
+            raise CommandError(f"표준입력 읽기 실패: {e}")
 
-        rows, fieldnames = self._read_csv(input_path, delimiter)
+        lines: List[str] = input_text.splitlines()
 
-        if "email" not in fieldnames:
-            raise CommandError("CSV에 'email' 컬럼이 필요합니다. (username은 선택)")
+        if not lines:
+            raise CommandError("입력 라인이 없습니다. email,username 을 붙여넣어 주세요.")
 
         created = 0
         skipped = 0
@@ -81,19 +110,22 @@ class Command(BaseCommand):
         # 헤더 출력(email, password, status)
         self.stdout.write("email\tpassword\tstatus")
 
-        for line_no, row in enumerate(rows, start=2):
-            email = (row.get("email") or "").strip()
-            username = (row.get("username") or "").strip() if "username" in row else ""
-
-            if not email:
-                self.stderr.write(f"[line {line_no}] email이 비어 있어 스킵합니다.")
-                skipped += 1
+        for idx, line in enumerate(lines, start=1):
+            email, username, err = _parse_line(line, delimiter)
+            if err:
+                if err == "empty line":
+                    skipped += 1
+                    continue
+                self.stderr.write(f"[line {idx}] 파싱 실패: {err} -> {line!r}")
+                errors += 1
                 continue
+            
+            assert email is not None
 
             try:
                 exists = User.objects.filter(email=email).exists()
             except Exception as e:
-                self.stderr.write(f"[line {line_no}] DB 조회 실패({email}): {e}")
+                self.stderr.write(f"[line {idx}] DB 조회 실패({email}): {e}")
                 errors += 1
                 continue
 
@@ -103,7 +135,7 @@ class Command(BaseCommand):
                     skipped += 1
                     continue
                 else:
-                    self.stderr.write(f"[line {line_no}] 이미 존재하는 이메일: {email} (스킵하려면 --skip-existing)")
+                    self.stderr.write(f"[line {idx}] 이미 존재하는 이메일: {email} (스킵하려면 --skip-existing)")
                     errors += 1
                     continue
 
@@ -111,7 +143,7 @@ class Command(BaseCommand):
             try:
                 password = generate_strong_password(password_length)
             except Exception as e:
-                self.stderr.write(f"[line {line_no}] 비밀번호 생성 실패({email}): {e}")
+                self.stderr.write(f"[line {idx}] 비밀번호 생성 실패({email}): {e}")
                 errors += 1
                 continue
 
@@ -131,22 +163,13 @@ class Command(BaseCommand):
                 created += 1
             except TypeError as e:
                 self.stderr.write(
-                    f"[line {line_no}] create_user 인자 불일치 가능({email}): {e}\n"
+                    f"[line {idx}] create_user 인자 불일치 가능({email}): {e}\n"
                     f"-> UserManager.create_user 시그니처 확인 필요"
                 )
                 errors += 1
             except Exception as e:
-                self.stderr.write(f"[line {line_no}] 사용자 생성 실패({email}): {e}")
+                self.stderr.write(f"[line {idx}] 사용자 생성 실패({email}): {e}")
                 errors += 1
 
         mode = "DRY-RUN" if dry_run else "APPLIED"
         self.stdout.write(f"\n[{mode}] created={created}, skipped={skipped}, errors={errors}")
-
-    def _read_csv(self, path: str, delimiter: str) -> Tuple[List[Dict[str, str]], List[str]]:
-        with open(path, "r", newline="", encoding="utf-8") as f:
-            reader = csv.DictReader(f, delimiter=delimiter)
-            if reader.fieldnames is None:
-                raise CommandError("CSV 헤더를 읽을 수 없습니다.")
-            fieldnames = list(reader.fieldnames)
-            rows = [dict(r) for r in reader]
-        return rows, fieldnames
