@@ -4,7 +4,12 @@ class Example(Enum):
     """
     예시 코드입니다.
     """
-    example = 'example:{value}'
+    EXAMPLE = 'example:{value}'
+
+    def format(self, **kwargs):
+        return self.value.format(**kwargs)
+
+class CacheKey(Enum):
 
     def format(self, **kwargs):
         return self.value.format(**kwargs)
