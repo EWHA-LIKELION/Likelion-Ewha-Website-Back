@@ -23,6 +23,34 @@ class CombinedScheduleView(APIView):
             {"message": "모집 일정 조회 성공", "data": data},
             status=status.HTTP_200_OK,
         )
+    
+    def post(self, request:HttpRequest, format:None):
+        year = request.query_params.get('year')
+        if not year:
+            return Response(
+                {"message": "year 쿼리 파라미터가 필요합니다.", "error": {"required": ["year"]}},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        
+        serializer = CombinedScheduleSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(
+                {"message": "요청 값이 올바르지 않습니다.", "errors": serializer.errors},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        
+        service = RecruitmentScheduleService(request)
+        try:
+            data = service.post(year=int(year), validated_data=serializer.validated_data)
+            return Response(
+                {"message": "모집 일정 등록 성공", "data": data},
+                status=status.HTTP_201_CREATED,
+            )
+        except Exception as e:
+            return Response(
+                {"message": "모집 일정 등록 실패", "error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
     def patch(self, request:HttpRequest, format=None):
         year = request.query_params.get('year')

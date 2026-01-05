@@ -2,7 +2,7 @@ from django.db import transaction
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
 from django.db.models.functions import Cast
-from django.db.models import DateField, Min, Max
+from django.db.models import DateField, Min, Max, Value
 from .models import RecruitmentSchedule, InterviewSchedule
 from .serializers import RecruitmentScheduleSerializer, InterviewScheduleSerializer
 
@@ -37,6 +37,9 @@ class RecruitmentScheduleService:
         )
 
         if not interview_period.exists():
+            self.instance.interview_start = None
+            self.instance.interview_end = None
+            self.instance.save(update_fields=["interview_start", "interview_end"])
             return
         
         aggregates = interview_period.aggregate(
@@ -52,6 +55,49 @@ class RecruitmentScheduleService:
             'recruitment_schedule': RecruitmentScheduleSerializer(self.instance).data,
             'interview_schedules': self.group_interviews(),
         }
+
+    def post(self, year:int, validated_data: dict) -> dict:
+        with transaction.atomic():
+            recruit_schedule = validated_data["recruitment_schedule"]
+            if recruit_schedule is None:
+                raise ValueError("모집 일정 데이터가 필요합니다.")
+        
+            if RecruitmentSchedule.objects.filter(year=year).exists():
+                raise ValueError("이미 해당 연도의 모집 일정이 존재합니다.")
+        
+            # 모집 일정 생성
+            self.instance = RecruitmentSchedule.objects.create(
+                year=year,
+                application_start=recruit_schedule["application_start"],
+                application_end=recruit_schedule["application_end"],
+                first_result_start=recruit_schedule["first_result_start"],
+                first_result_end=recruit_schedule["final_result_start"],
+                final_result_start=recruit_schedule["final_result_start"],
+                final_result_end=recruit_schedule["final_result_end"],
+            )
+
+
+            # 면접 일정 생성
+            interview_schedules_part = validated_data.get("interview_schedules")
+            if interview_schedules_part:
+                for part, items in interview_schedules_part.items():
+                    objs = [
+                        InterviewSchedule(
+                            recruitment_schedule=self.instance,
+                            part=part,
+                            start=itv["start"],
+                            end=itv["end"],
+                            interview_method=itv["interview_method"],
+                            interview_location=itv.get("interview_location") or None,
+                        )
+                        for itv in items
+                    ]
+                    if objs:
+                        InterviewSchedule.objects.bulk_create(objs)
+
+                self.calc_interview_period()
+
+        return self.get()
     
     def patch(self, validated_data: dict) -> dict:
         with transaction.atomic():
