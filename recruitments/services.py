@@ -76,7 +76,6 @@ class RecruitmentScheduleService:
                 final_result_end=recruit_schedule["final_result_end"],
             )
 
-
             # 면접 일정 생성
             interview_schedules_part = validated_data.get("interview_schedules")
             if interview_schedules_part:

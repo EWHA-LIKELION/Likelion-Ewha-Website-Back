@@ -1,14 +1,14 @@
 from django.http import HttpRequest
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import CombinedScheduleSerializer
 from .services import RecruitmentScheduleService
 
 class CombinedScheduleView(APIView):
-    permission_classes = [IsAuthenticated]
-    
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
     def get(self, request:HttpRequest, format=None):
         year = request.query_params.get('year')
         if not year:
@@ -24,7 +24,7 @@ class CombinedScheduleView(APIView):
             status=status.HTTP_200_OK,
         )
     
-    def post(self, request:HttpRequest, format:None):
+    def post(self, request:HttpRequest, format=None):
         year = request.query_params.get('year')
         if not year:
             return Response(
