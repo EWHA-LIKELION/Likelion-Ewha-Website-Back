@@ -21,5 +21,5 @@ class ApplicationView(APIView):
 
         return Response(
             status=status.HTTP_201_CREATED,
-            data={"detail":"지원서를 제출했습니다."},
+            data={"application_code":지원코드},
         )
