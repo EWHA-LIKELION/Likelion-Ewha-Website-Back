@@ -174,3 +174,14 @@ class Application(models.Model):
 
     def __str__(self):
         return f"{self.student_number} {self.name} ({localtime(self.created_at).strftime('%Y-%m-%d %H:%M:%S %Z')})"
+
+class InterviewSlot(models.Model):
+    interview_schedule = models.ForeignKey(
+        InterviewSchedule,
+        on_delete=models.CASCADE,
+        related_name="slots",
+    )
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+
+    max_capacity = models.PositiveSmallIntegerField(default=3)
