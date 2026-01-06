@@ -1,7 +1,9 @@
 from datetime import datetime
 import re
+from string import ascii_uppercase, digits
 from django.core.validators import FileExtensionValidator
 from rest_framework import serializers
+import nanoid
 from utils.choices import InterviewMethodChoices, PartChoices
 from utils.validators import FileSizeValidator
 from .models import InterviewSchedule, Application
@@ -91,3 +93,27 @@ class ApplicationCreateSerializer(serializers.Serializer):
     #             # 페이지 1장 이상: 빈 파일은 업로드할 수 없음
     #             # 파일 끝부분이 잘리지 않았는지 확인 (마지막 페이지 데이터 접근)
     #     return value
+
+    def create(self, validated_data:dict)->str:
+        completed_prerequisites:list = validated_data.pop("completed_prerequisites")
+        portfolios:list = validated_data.pop("portfolios")
+
+        # 지원 코드 생성
+        application_code = nanoid.generate(alphabet=ascii_uppercase+digits, size=10)
+
+        # 지원 코드 단방향 암호화
+        # 나머지 정보(이미지, 포트폴리오 제외) 양방향 암호화
+
+        # 데이터베이스 저장
+        Application.objects.create(
+            application_code=application_code,
+            completed_prerequisite_1=completed_prerequisites[0],
+            completed_prerequisite_2=completed_prerequisites[1],
+            completed_prerequisite_3=completed_prerequisites[2],
+            portfolio_1=portfolios[0],
+            portfolio_2=portfolios[1],
+            portfolio_3=portfolios[2],
+            **validated_data,
+        )
+
+        return application_code

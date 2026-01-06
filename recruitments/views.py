@@ -7,7 +7,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import RecruitmentSchedule, InterviewSchedule
 from .serializers import ApplicationCreateSerializer
-from .services import ApplicationService
 
 class ApplicationView(APIView):
     def get_permissions(self):
@@ -40,10 +39,9 @@ class ApplicationView(APIView):
         if not serializer.is_valid():
             raise ValidationError(detail=serializer.errors)
 
-        application_service = ApplicationService(request)
-        application = application_service.post()
+        application_code = serializer.save()
 
         return Response(
             status=status.HTTP_201_CREATED,
-            data={"application_code":지원코드},
+            data={"application_code":application_code},
         )
