@@ -10,7 +10,7 @@ from .models import InterviewSchedule, Application
 
 class ApplicationCreateSerializer(serializers.Serializer):
     """
-    지원서 추가 API에서 요청값을 검증하는 시리얼라이저입니다.
+    지원서 추가 API용 시리얼라이저
     """
     interview_method = serializers.ChoiceField(choices=InterviewMethodChoices.choices)
     interview_available_times = serializers.ListField(child=serializers.DateTimeField(), min_length=1)
