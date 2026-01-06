@@ -8,7 +8,7 @@ from utils.choices import InterviewMethodChoices, PartChoices
 from utils.validators import FileSizeValidator
 from .models import InterviewSchedule, Application
 
-class ApplicationCreateSerializer(serializers.Serializer):
+class ApplicationCreateSerializer(serializers.ModelSerializer):
     """
     지원서 추가 API용 시리얼라이저
     """
