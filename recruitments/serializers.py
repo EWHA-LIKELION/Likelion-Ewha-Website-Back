@@ -23,6 +23,8 @@ class ApplicationCreateSerializer(serializers.Serializer):
             ],
         ),
         max_length=3,
+        required=False,
+        allow_null=True,
     )
     portfolios = serializers.ListField(
         child=serializers.FileField(
@@ -32,6 +34,8 @@ class ApplicationCreateSerializer(serializers.Serializer):
             ],
         ),
         max_length=3,
+        required=False,
+        allow_null=True,
     )
 
     class Meta:
