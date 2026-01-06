@@ -99,8 +99,10 @@ class ApplicationCreateSerializer(serializers.Serializer):
     #     return value
 
     def create(self, validated_data:dict)->str:
-        completed_prerequisites:list = validated_data.pop("completed_prerequisites")
-        portfolios:list = validated_data.pop("portfolios")
+        completed_prerequisites:list = validated_data.pop("completed_prerequisites", list())
+        portfolios:list = validated_data.pop("portfolios", list())
+        completed_prerequisite_list = (completed_prerequisites + [None]*3)[:3]
+        portfolio_list = (portfolios + [None]*3)[:3]
 
         # 지원 코드 생성
         application_code = nanoid.generate(alphabet=ascii_uppercase+digits, size=10)
@@ -111,12 +113,12 @@ class ApplicationCreateSerializer(serializers.Serializer):
         # 데이터베이스 저장
         Application.objects.create(
             application_code=application_code,
-            completed_prerequisite_1=completed_prerequisites[0],
-            completed_prerequisite_2=completed_prerequisites[1],
-            completed_prerequisite_3=completed_prerequisites[2],
-            portfolio_1=portfolios[0],
-            portfolio_2=portfolios[1],
-            portfolio_3=portfolios[2],
+            completed_prerequisite_1=completed_prerequisite_list[0],
+            completed_prerequisite_2=completed_prerequisite_list[1],
+            completed_prerequisite_3=completed_prerequisite_list[2],
+            portfolio_1=portfolio_list[0],
+            portfolio_2=portfolio_list[1],
+            portfolio_3=portfolio_list[2],
             **validated_data,
         )
 
