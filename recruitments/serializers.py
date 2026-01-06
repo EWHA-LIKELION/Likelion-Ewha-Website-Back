@@ -36,12 +36,12 @@ class ApplicationCreateSerializer(serializers.Serializer):
 
     class Meta:
         model = Application
-        fields  =   (
-                        "name","phone_number","birthday","department","student_number","grade",
-                        "interview_method","interview_available_times",
-                        "part","personal_statement_1","personal_statement_2","personal_statement_3","personal_statement_4","personal_statement_5",
-                        "completed_prerequisites","portfolios",
-                    )
+        fields = (
+                    "name","phone_number","birthday","department","student_number","grade",
+                    "interview_method","interview_available_times",
+                    "part","personal_statement_1","personal_statement_2","personal_statement_3","personal_statement_4","personal_statement_5",
+                    "completed_prerequisites","portfolios",
+                 )
 
     def validate_phone_number(self, value:str):
         phone_regex = r"^01([0|1|6|7|8|9])-?([0-9]{4})-?([0-9]{4})$"
