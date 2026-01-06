@@ -1,11 +1,12 @@
 from django.http import HttpRequest
 from django.utils import timezone
 from rest_framework import status
-from rest_framework.exceptions import APIException, PermissionDenied
+from rest_framework.exceptions import APIException, ValidationError, PermissionDenied
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import RecruitmentSchedule
+from .models import RecruitmentSchedule, InterviewSchedule
+from .serializers import ApplicationCreateSerializer
 from .services import ApplicationService
 
 class ApplicationView(APIView):
@@ -26,7 +27,18 @@ class ApplicationView(APIView):
         if not recruitment_schedule.application_start <= current_time <= recruitment_schedule.application_end:
             raise PermissionDenied(detail="서류 접수 기간이 아닙니다.")
 
-        # 시리얼라이저 통해 요청값 검증
+        # 요청값 검증
+        interview_schedules = list(
+            InterviewSchedule.objects
+            .filter(recruitment_schedule__year=current_time.year)
+            .order_by("start")
+        )
+        serializer = ApplicationCreateSerializer(
+            data=request.data,
+            context={"interview_schedules": interview_schedules}
+        )
+        if not serializer.is_valid():
+            raise ValidationError(detail=serializer.errors)
 
         application_service = ApplicationService(request)
         application = application_service.post()
