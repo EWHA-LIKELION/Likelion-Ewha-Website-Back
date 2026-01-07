@@ -19,9 +19,17 @@ class CombinedScheduleView(APIView):
                 {"datail": "year 쿼리 파라미터가 필요합니다.", "error": {"required": ["year"]}},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        
+        only = request.query_params.get("only")
+
         service = RecruitmentScheduleService(request, year=int(year))
         data = service.get()
+
+        if only == "recruitment":
+            return Response(
+                {"recruitment_schedule": data.get("recruitment_schedule")},
+                status=status.HTTP_200_OK,
+            )
+        
         return Response(
             data,
             status=status.HTTP_200_OK,
