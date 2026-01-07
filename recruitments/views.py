@@ -65,17 +65,11 @@ class ApplicationView(APIView):
             filters &= Q(interview_method__in=interview_method)
 
         if year:
-            try:
-                schedule = RecruitmentSchedule.objects.get(year=year)
-                filters &= Q(
-                    created_at__gte = schedule.application_start,
-                    created_at__lte = schedule.application_end,
-                )
-            except RecruitmentSchedule.DoesNotExist:
-                return Response(
-                    {"detail": "해당 모집 연도가 존재하지 않습니다"},
-                    status=400
-                )
+            schedule = RecruitmentSchedule.objects.get(year=year)
+            filters &= Q(
+                created_at__gte = schedule.application_start,
+                created_at__lte = schedule.application_end,
+            )
 
         filter_counts = {
             "part" : len(part),
