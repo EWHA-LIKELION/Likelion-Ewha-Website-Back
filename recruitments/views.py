@@ -58,7 +58,6 @@ class ApplicationListView(APIView):
                     Q(name__icontains=keyword) | 
                     Q(student_number__icontains=keyword) |
                     Q(phone_number__icontains=keyword) | 
-                    Q(application_code__icontains=keyword)
                 )
         applications = Application.objects.filter(filters)
 
