@@ -68,12 +68,7 @@ class RecruitmentScheduleService:
             # 모집 일정 생성
             self.instance = RecruitmentSchedule.objects.create(
                 year=year,
-                application_start=recruit_schedule["application_start"],
-                application_end=recruit_schedule["application_end"],
-                first_result_start=recruit_schedule["first_result_start"],
-                first_result_end=recruit_schedule["final_result_start"],
-                final_result_start=recruit_schedule["final_result_start"],
-                final_result_end=recruit_schedule["final_result_end"],
+                **recruit_schedule
             )
 
             # 면접 일정 생성
