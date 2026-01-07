@@ -16,7 +16,7 @@ class CombinedScheduleView(APIView):
         year = request.query_params.get('year')
         if not year:
             return Response(
-                {"message": "year 쿼리 파라미터가 필요합니다.", "error": {"required": ["year"]}},
+                {"datail": "year 쿼리 파라미터가 필요합니다.", "error": {"required": ["year"]}},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         
@@ -31,14 +31,14 @@ class CombinedScheduleView(APIView):
         year = request.query_params.get('year')
         if not year:
             return Response(
-                {"message": "year 쿼리 파라미터가 필요합니다.", "error": {"required": ["year"]}},
+                {"detail": "year 쿼리 파라미터가 필요합니다.", "error": {"required": ["year"]}},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         
         serializer = CombinedScheduleSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
-                {"message": "요청 값이 올바르지 않습니다.", "errors": serializer.errors},
+                {"detail": "요청 값이 올바르지 않습니다.", "error": serializer.errors},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         
@@ -51,7 +51,7 @@ class CombinedScheduleView(APIView):
             )
         except Exception as e:
             return Response(
-                {"message": "모집 일정 등록 실패", "error": str(e)},
+                {"detail": "모집 일정 등록 실패", "error": str(e)},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -59,14 +59,14 @@ class CombinedScheduleView(APIView):
         year = request.query_params.get('year')
         if not year:
             return Response(
-                {"message": "year 쿼리 파라미터가 필요합니다.", "error": {"required": ["year"]}},
+                {"detail": "year 쿼리 파라미터가 필요합니다.", "error": {"required": ["year"]}},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         serializer = CombinedScheduleSerializer(data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(
-                {"message": "요청 값이 올바르지 않습니다.", "errors": serializer.errors},
+                {"detail": "요청 값이 올바르지 않습니다.", "error": serializer.errors},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -79,6 +79,6 @@ class CombinedScheduleView(APIView):
             )
         except Exception as e:
             return Response(
-                {"message": "모집 일정 수정 실패", "error": str(e)},
+                {"detail": "모집 일정 수정 실패", "error": str(e)},
                 status=status.HTTP_400_BAD_REQUEST,
             )
