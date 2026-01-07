@@ -3,9 +3,20 @@ from django.db import models
 from django.utils.timezone import localtime
 from utils.choices import PartChoices, InterviewMethodChoices, StatusChoices
 
-class RecruitmentSchedule(models.Model):
+class RecruitmentYear(models.Model):
     year = models.PositiveSmallIntegerField(
         help_text="모집 연도",
+        primary_key=True,
+    )
+
+    def __str__(self):
+        return f"{self.year}년"
+
+class RecruitmentSchedule(models.Model):
+    year = models.OneToOneField(
+        RecruitmentYear,
+        on_delete=models.CASCADE,
+        related_name="recruitmentschedule",
         primary_key=True,
     )
     application_start = models.DateTimeField(
