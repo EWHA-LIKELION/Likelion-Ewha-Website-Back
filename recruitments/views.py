@@ -51,7 +51,7 @@ class ApplicationListView(APIView):
         # 검색
         search = request.query_params.get("search")
         if search:
-            keywords = [k.strip() for k in search.split("/") if k.strip()] # ,로 다중 검색
+            keywords = [k.strip() for k in search.split(",") if k.strip()] # ,로 다중 검색
 
             for keyword in keywords:
                 filters &= (
