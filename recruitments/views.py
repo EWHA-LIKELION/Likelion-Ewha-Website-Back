@@ -78,7 +78,6 @@ class ApplicationListView(APIView):
             applications = applications.order_by(
                 "part_order",
                 "interview_at",
-                "application_code",
             )
         else:
             applications = applications.order_by(
