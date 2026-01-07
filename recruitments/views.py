@@ -2,10 +2,10 @@ from django.http import HttpRequest
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.exceptions import APIException, ValidationError, PermissionDenied
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import RecruitmentSchedule, InterviewSchedule
+from .models import RecruitmentYear, RecruitmentSchedule, InterviewSchedule
 from .serializers import ApplicationCreateSerializer
 
 class ApplicationView(APIView):
@@ -45,3 +45,21 @@ class ApplicationView(APIView):
             status=status.HTTP_201_CREATED,
             data={"application_code":application_code},
         )
+
+class RecruitmentYearView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
+    
+    def get(self, request):
+        current_year = timezone.now().year
+        RecruitmentYear.objects.get_or_create(year=current_year)
+
+        years = list(
+            RecruitmentYear.objects
+            .order_by("-year")
+            .values_list("year", flat=True) #연도값만 받기 때문에 리스트로 변환
+        )
+
+        return Response(
+            {"years":years}, 
+            status=status.HTTP_200_OK,
+            )
