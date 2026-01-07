@@ -186,7 +186,7 @@ AWS_QUERYSTRING_AUTH = False
 
 STORAGES = {
     "default": {
-        "BACKEND": "storages.backends.s3.S3Storage",
+        "BACKEND": "configs.storages.CustomS3Storage",
         "OPTIONS": {
             "location": "media",
         },
