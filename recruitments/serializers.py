@@ -11,7 +11,7 @@ class ApplicationListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Application
-        fields = ("student_number", "part", "name", "interview_method", "interview_at", "status", "phone_number", "application_code",)
+        fields = ("student_number", "part", "name", "interview_method", "interview_at", "status", "phone_number",)
 
     def get_part(self, obj):
         return obj.get_part_display()
