@@ -23,7 +23,7 @@ class CombinedScheduleView(APIView):
         service = RecruitmentScheduleService(request, year=int(year))
         data = service.get()
         return Response(
-            {"message": "모집 일정 조회 성공", "data": data},
+            data,
             status=status.HTTP_200_OK,
         )
     
@@ -46,7 +46,7 @@ class CombinedScheduleView(APIView):
         try:
             data = service.post(year=int(year), validated_data=serializer.validated_data)
             return Response(
-                {"message": "모집 일정 등록 성공", "data": data},
+                data,
                 status=status.HTTP_201_CREATED,
             )
         except Exception as e:
@@ -74,7 +74,7 @@ class CombinedScheduleView(APIView):
         try:
             data = service.patch(validated_data=serializer.validated_data)
             return Response(
-                {"message": "모집 일정 수정 성공", "data": data},
+                data,
                 status=status.HTTP_200_OK,
             )
         except Exception as e:
