@@ -3,7 +3,7 @@ from django.utils.timezone import localtime
 from .models import Application
 from utils.choices import InterviewMethodChoices, StatusChoices
 
-class ApplicationSerializer(serializers.ModelSerializer):
+class ApplicationListSerializer(serializers.ModelSerializer):
     part = serializers.SerializerMethodField()
     interview_method = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
