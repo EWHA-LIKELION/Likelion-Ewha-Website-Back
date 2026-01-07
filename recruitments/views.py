@@ -55,7 +55,24 @@ class ApplicationView(APIView):
         part = request.query_params.getlist("part")
         status = request.query_params.getlist("status")
         interview_method = request.query_params.getlist("interview_method")
-        year = request.query_params.get("year") #다중필터링이 아니라서 getlist가 아닌 get
+
+        year = request.query_params.get("year") or timezone.now().year #다중필터링이 아니라서 getlist가 아닌 get, 안전하게 default 처리
+
+        try:
+            schedule = RecruitmentSchedule.objects.get(year_id=year)
+        except RecruitmentSchedule.DoesNotExist:
+            return Response(
+                {
+                    "year": year,
+                    "detail": "모집 일정이 준비되지 않았습니다.",
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        filters &= Q(
+            created_at__gte = schedule.application_start,
+            created_at__lte = schedule.application_end,
+        )
 
         if part:
             filters &= Q(part__in=part)
@@ -63,13 +80,6 @@ class ApplicationView(APIView):
             filters &= Q(status__in=status)
         if interview_method:
             filters &= Q(interview_method__in=interview_method)
-
-        if year:
-            schedule = RecruitmentSchedule.objects.get(year=year)
-            filters &= Q(
-                created_at__gte = schedule.application_start,
-                created_at__lte = schedule.application_end,
-            )
 
         filter_counts = {
             "part" : len(part),
