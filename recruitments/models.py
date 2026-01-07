@@ -138,17 +138,41 @@ class Application(models.Model):
     personal_statement_5 = models.TextField(
         help_text="자기소개 5번 문항의 답변",
     )
-    completed_prerequisites = ArrayField(
+    completed_prerequisite_1 = models.ImageField(
         help_text="선수강 강의 이수 내역",
-        base_field=models.URLField(),
-        size=3,
-        default=list,
+        upload_to="application/completed_prerequisite",
+        null=True,
+        blank=True,
     )
-    portfolios = ArrayField(
+    completed_prerequisite_2 = models.ImageField(
+        help_text="선수강 강의 이수 내역",
+        upload_to="application/completed_prerequisite",
+        null=True,
+        blank=True,
+    )
+    completed_prerequisite_3 = models.ImageField(
+        help_text="선수강 강의 이수 내역",
+        upload_to="application/completed_prerequisite",
+        null=True,
+        blank=True,
+    )
+    portfolio_1 = models.FileField(
         help_text="포트폴리오",
-        base_field=models.URLField(),
-        size=3,
-        default=list,
+        upload_to="application/portfolio",
+        null=True,
+        blank=True,
+    )
+    portfolio_2 = models.FileField(
+        help_text="포트폴리오",
+        upload_to="application/portfolio",
+        null=True,
+        blank=True,
+    )
+    portfolio_3 = models.FileField(
+        help_text="포트폴리오",
+        upload_to="application/portfolio",
+        null=True,
+        blank=True,
     )
 
     # 그외
