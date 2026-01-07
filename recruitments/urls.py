@@ -4,5 +4,6 @@ from .views import *
 app_name = 'recruitments'
 
 urlpatterns = [
-    path("application/", ApplicationView.as_view())
+    path("application/", ApplicationView.as_view()),
+    path("recruitment-years/", RecruitmentYearView.as_view()),
 ]
