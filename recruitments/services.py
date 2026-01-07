@@ -64,6 +64,9 @@ class RecruitmentScheduleService:
         
             if RecruitmentSchedule.objects.filter(year=year).exists():
                 raise ValueError("이미 해당 연도의 모집 일정이 존재합니다.")
+            
+            
+            recruit_schedule["first_result_end"] = recruit_schedule["final_result_start"]
         
             # 모집 일정 생성
             self.instance = RecruitmentSchedule.objects.create(
