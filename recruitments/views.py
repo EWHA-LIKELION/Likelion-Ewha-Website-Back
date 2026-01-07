@@ -83,7 +83,6 @@ class ApplicationListView(APIView):
             applications = applications.order_by(
                 "part_order",
                 "name",
-                "application_code",
             )
 
         serializer = ApplicationSerializer(applications, many=True)
