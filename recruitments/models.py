@@ -22,9 +22,13 @@ class RecruitmentSchedule(models.Model):
     )
     interview_start = models.DateField(
         help_text="면접 기간 시작",
+        null=True,
+        blank=True,
     )
     interview_end = models.DateField(
         help_text="면접 기간 종료",
+        null=True,
+        blank=True,
     )
     final_result_start = models.DateTimeField(
         help_text="최종 합격자 발표 시작",
