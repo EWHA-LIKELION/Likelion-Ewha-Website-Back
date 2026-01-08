@@ -47,7 +47,7 @@ class ApplicationView(APIView):
             data={"application_code":application_code},
         )
 
-class ApplicationDetailView(APIView):
+class ApplicationByStudentNumberView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def delete(self, request, student_number):
