@@ -1,10 +1,10 @@
 from datetime import datetime
+import nanoid
 import re
 from string import ascii_uppercase, digits
 from django.core.validators import FileExtensionValidator
 from rest_framework import serializers
-import nanoid
-from utils.choices import InterviewMethodChoices, PartChoices
+from utils.choices import InterviewMethodChoices, PartChoices, StatusChoices
 from utils.validators import FileSizeValidator
 from .models import InterviewSchedule, Application
 
@@ -123,3 +123,13 @@ class ApplicationCreateSerializer(serializers.ModelSerializer):
         )
 
         return application_code
+
+class ApplicationUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Application
+        fields = ("status",)
+    #합격 여부 상태
+    def validate_status(self, value):
+        if value not in StatusChoices.values:
+            raise serializers.ValidationError("유효하지 않은 항목")
+        return value

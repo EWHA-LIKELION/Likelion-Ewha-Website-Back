@@ -1,12 +1,13 @@
 from django.http import HttpRequest
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.exceptions import APIException, ValidationError, PermissionDenied
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import RecruitmentSchedule, InterviewSchedule
-from .serializers import ApplicationCreateSerializer
+from .models import Application, RecruitmentSchedule, InterviewSchedule
+from .serializers import ApplicationCreateSerializer, ApplicationUpdateSerializer
 
 class ApplicationView(APIView):
     def get_permissions(self):
@@ -45,3 +46,26 @@ class ApplicationView(APIView):
             status=status.HTTP_201_CREATED,
             data={"application_code":application_code},
         )
+
+class ApplicationByStudentNumberView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def delete(self, request, student_number):
+        application = get_object_or_404(Application, student_number=student_number)
+        application.delete()
+        return Response({"detail":"지원자 정보가 삭제되었습니다."},status=status.HTTP_200_OK,)
+    
+    def patch(self, request, student_number):
+        application = get_object_or_404(Application, student_number = student_number)
+
+        serializer = ApplicationUpdateSerializer(
+            application,
+            data=request.data,
+            partial=True
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"detail":"수정이 완료되었습니다."}, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
