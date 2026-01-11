@@ -1,5 +1,6 @@
 from datetime import datetime
-import re, nanoid
+import nanoid
+import re
 from string import ascii_uppercase, digits
 from django.core.validators import FileExtensionValidator
 from rest_framework import serializers
