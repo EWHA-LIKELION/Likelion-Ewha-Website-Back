@@ -1,14 +1,14 @@
+from django.db.models import Q, Case, When, IntegerField
 from django.http import HttpRequest
 from django.utils import timezone
-from django.db.models import Q, Case, When, IntegerField
 from rest_framework import status
 from rest_framework.exceptions import APIException, ValidationError, PermissionDenied
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from utils.choices import PartChoices
 from .models import Application, RecruitmentSchedule, InterviewSchedule
 from .serializers import ApplicationCreateSerializer, ApplicationListSerializer
-from utils.choices import PartChoices
 
 class ApplicationView(APIView):
     def get_permissions(self):
