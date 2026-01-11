@@ -1,12 +1,13 @@
 from datetime import datetime
-import re, nanoid
+import nanoid
+import re
 from string import ascii_uppercase, digits
 from django.core.validators import FileExtensionValidator
-from rest_framework import serializers
 from django.utils.timezone import localtime
-from .models import InterviewSchedule, Application
+from rest_framework import serializers
 from utils.choices import InterviewMethodChoices, StatusChoices, PartChoices
 from utils.validators import FileSizeValidator
+from .models import InterviewSchedule, Application
 
 class ApplicationListSerializer(serializers.ModelSerializer):
     part = serializers.SerializerMethodField()
