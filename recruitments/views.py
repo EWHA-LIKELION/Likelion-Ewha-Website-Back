@@ -1,19 +1,21 @@
+from django.db.models import Q, Case, When, IntegerField
 from django.http import HttpRequest
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.exceptions import APIException, ValidationError, PermissionDenied
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import RecruitmentSchedule, InterviewSchedule
-from .serializers import ApplicationCreateSerializer
+from utils.choices import PartChoices
+from .models import Application, RecruitmentSchedule, InterviewSchedule
+from .serializers import ApplicationCreateSerializer, ApplicationListSerializer
 
 class ApplicationView(APIView):
     def get_permissions(self):
         if self.request.method == 'POST':
             return [AllowAny()]
         else:
-            return [IsAuthenticated()]
+            return [IsAuthenticated(), IsAdminUser()]
 
     def post(self, request:HttpRequest, format=None):
         # 서류 접수 기간 검증
@@ -45,3 +47,90 @@ class ApplicationView(APIView):
             status=status.HTTP_201_CREATED,
             data={"application_code":application_code},
         )
+
+    def get(self, request):
+        # 필터링
+        filters = Q()
+
+        part = request.query_params.getlist("part")
+        status = request.query_params.getlist("status")
+        interview_method = request.query_params.getlist("interview_method")
+
+        year = request.query_params.get("year") or timezone.now().year #다중필터링이 아니라서 getlist가 아닌 get, 안전하게 default 처리
+
+        try:
+            schedule = RecruitmentSchedule.objects.get(year_id=year)
+        except RecruitmentSchedule.DoesNotExist:
+            return Response(
+                {
+                    "year": year,
+                    "detail": "모집 일정이 준비되지 않았습니다.",
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        filters &= Q(
+            created_at__gte = schedule.application_start,
+            created_at__lte = schedule.application_end,
+        )
+
+        if part:
+            filters &= Q(part__in=part)
+        if status:
+            filters &= Q(status__in=status)
+        if interview_method:
+            filters &= Q(interview_method__in=interview_method)
+
+        filter_counts = {
+            "part" : len(part),
+            "status" : len(status),
+            "interview_method" : len(interview_method),
+        }
+            
+        # 검색
+        search = request.query_params.get("search")
+        if search:
+            keywords = [k.strip() for k in search.split(",") if k.strip()] # ,로 다중 검색
+
+            for keyword in keywords:
+                filters &= (
+                    Q(name__icontains=keyword) | 
+                    Q(student_number__icontains=keyword) |
+                    Q(phone_number__icontains=keyword)
+                )
+        applications = Application.objects.filter(filters)
+
+        # 파트 정렬 기준 정의 (기디 -> 프론트 -> 백)
+        part_order = Case(
+            When(part=PartChoices.PM_DESIGN, then=0),
+            When(part=PartChoices.FRONTEND, then=1),
+            When(part=PartChoices.BACKEND, then=2),
+            output_field=IntegerField(),
+        )
+
+        applications = applications.annotate(part_order=part_order)
+
+        # 정렬 (기본순, 면접순)
+        order = request.query_params.get("order", "default")
+
+        if order == "interview":
+            applications = applications.order_by(
+                "part_order",
+                "interview_at",
+            )
+        else:
+            applications = applications.order_by(
+                "part_order",
+                "name",
+            )
+
+        serializer = ApplicationListSerializer(applications, many=True)
+        data = serializer.data
+        
+        for idx, item in enumerate(data, start=1):
+            item["order"] = idx
+        
+        return Response({
+            "filter_counts": filter_counts,
+            "results": data, 
+        })
