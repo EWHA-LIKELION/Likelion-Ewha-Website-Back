@@ -158,15 +158,14 @@ class InterviewScheduleSerializer(serializers.ModelSerializer):
         start = attrs.get('start')
         end = attrs.get('end')
 
-        if start and end:
-            if start >= end:
-                raise serializers.ValidationError(
-                    {"time": "면접 시작 시간은 종료 시간보다 이전이어야 합니다."}
-                )
-            if start.date() != end.date():
-                raise serializers.ValidationError(
-                    {"date": "면접 시작/종료는 같은 날짜여야 합니다."}
-                )
+        if start >= end:
+            raise serializers.ValidationError(
+                {"time": "면접 시작 시간은 종료 시간보다 이전이어야 합니다."}
+            )
+        if start.date() != end.date():
+            raise serializers.ValidationError(
+                {"date": "면접 시작/종료는 같은 날짜여야 합니다."}
+            )
         return attrs
 
 class CombinedScheduleSerializer(serializers.Serializer):
