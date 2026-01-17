@@ -62,8 +62,6 @@ class RecruitmentScheduleService:
             if recruit_schedule is None:
                 raise ValueError("모집 일정 데이터가 필요합니다.")
         
-            if RecruitmentSchedule.objects.filter(year=year).exists():
-                raise ValueError("이미 해당 연도의 모집 일정이 존재합니다.")
             
             
             recruit_schedule["first_result_end"] = recruit_schedule["final_result_start"]
