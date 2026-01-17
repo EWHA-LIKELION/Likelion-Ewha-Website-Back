@@ -1,3 +1,5 @@
+from itertools import groupby
+from operator import itemgetter
 from django.db import transaction
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
@@ -20,13 +22,12 @@ class RecruitmentScheduleService:
             recruitment_schedule = self.instance
         ).order_by('part', 'start')
 
-        grouped: dict[str, list] = {}
         data = InterviewScheduleSerializer(interview_schedules, many=True).data
 
-        for row in data:
-            grouped.setdefault(row['part'], []).append(row)
-        
-        return grouped
+        return {
+            part: list(items)
+            for part, items in groupby(data, key=itemgetter('part'))
+        }
     
     def calc_interview_period(self) -> None:
         """
