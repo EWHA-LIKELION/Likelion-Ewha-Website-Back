@@ -47,7 +47,7 @@ class ApplicationView(APIView):
             data={"application_code":application_code},
         )
 
-class CombinedScheduleView(APIView):
+class RecruitmentScheduleView(APIView):
     def get_permissions(self):
         if self.request.method == "GET":
             return [AllowAny()]
@@ -89,7 +89,7 @@ class CombinedScheduleView(APIView):
         
         service = RecruitmentScheduleService(request)
         data = service.post(year=int(year), validated_data=serializer.validated_data)
-        
+
         return Response(
             data,
             status=status.HTTP_201_CREATED,
