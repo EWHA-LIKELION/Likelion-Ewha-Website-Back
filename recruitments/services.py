@@ -62,8 +62,6 @@ class RecruitmentScheduleService:
             if recruit_schedule is None:
                 raise ValueError("모집 일정 데이터가 필요합니다.")
         
-            
-            
             # 모집 일정 생성
             self.instance = RecruitmentSchedule.objects.create(
                 year=year,
