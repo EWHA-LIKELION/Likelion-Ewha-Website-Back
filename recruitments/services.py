@@ -64,11 +64,10 @@ class RecruitmentScheduleService:
         
             
             
-            recruit_schedule["first_result_end"] = recruit_schedule["final_result_start"]
-        
             # 모집 일정 생성
             self.instance = RecruitmentSchedule.objects.create(
                 year=year,
+                first_result_end=recruit_schedule["final_result_start"],
                 **recruit_schedule
             )
 
